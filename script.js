@@ -37,24 +37,105 @@ const isUniqueToRow = (num, line) => {
 };
 
 const isUniqueToColumn = (num, lines, line) => {
-  // return true;
   const i = line.length;
   return lines.every((ln) => {
     return ln[i] !== num;
   });
 };
 
+const getBox = (lines, line) => {
+  const column = line.length;
+  const row = lines.length;
+  let box = 0;
+
+  if (row < 3) {
+    if (column < 3) {
+      box = 1;
+    } else if (column < 6) {
+      box = 2;
+    } else {
+      box = 3;
+    }
+  } else if (row < 6) {
+    if (column < 3) {
+      box = 4;
+    } else if (column < 6) {
+      box = 5;
+    } else {
+      box = 6;
+    }
+  } else {
+    if (column < 3) {
+      box = 7;
+    } else if (column < 6) {
+      box = 8;
+    } else {
+      box = 9;
+    }
+  }
+  return box;
+};
+
+const getBoxValues = (box, lines, line) => {
+  const values = [];
+  const wipLines = [...lines, line];
+  console.log("wipLines", wipLines);
+  let rowStart;
+  let rowEnd;
+  let colStart;
+  let colEnd;
+
+  if (box <= 3) {
+    rowStart = 0;
+    rowEnd = 3;
+  } else if (box <= 6) {
+    rowStart = 3;
+    rowEnd = 6;
+  } else {
+    rowStart = 6;
+    rowEnd = 9;
+  }
+
+  if (box === 1 || box === 4 || box === 7) {
+    colStart = 0;
+    colEnd = 3;
+  } else if (box === 2 || box === 5 || box === 8) {
+    colStart = 3;
+    colEnd = 6;
+  } else {
+    colStart = 6;
+    colEnd = 9;
+  }
+
+  for (let row = rowStart; row < rowEnd; row++) {
+    for (let col = colStart; col < colEnd; col++) {
+      if (wipLines[row] && wipLines[row][col]) {
+        values.push(wipLines[row][col]);
+      }
+    }
+  }
+
+  return values;
+};
+
 const isUniqueToBox = (num, lines, line) => {
-  return true; // TODO: make this work
+  const box = getBox(lines, line);
+  const boxValues = getBoxValues(box, lines, line);
+  console.log("box", box);
+  console.log("box values", boxValues);
+  return !boxValues.includes(num);
 };
 
 const getNextLine = (lines) => {
-  console.log("getNextLine");
+  // console.log("getNextLine");
   const lineLength = 9;
   let line = [];
   let count = 0;
   while (!line.length && count < 100) {
     line = tryToGetNextLine(lineLength, lines);
+  }
+  if (line.length !== lineLength) {
+    throw "Couldn't get the next line with 100 tries";
   }
   return line;
 };
@@ -68,28 +149,30 @@ const tryToGetNextLine = (lineLength, lines) => {
     }
   }
   if (line.length === lineLength) {
+    console.log(">>>>>>>> got the line", lines.length);
     return line;
   }
+  console.log(">>>>>>>> try line again", lines.length);
   return [];
 };
 
 const getNextNumber = (lines, line) => {
-  console.log("getNextNumber");
+  // console.log("getNextNumber");
   let isUnique = false;
   let count = 0;
   let num = getRandomNumber();
   while (!isUnique && count < 9) {
     // console.log("count", count);
     num = addOne(num);
-    console.log("num", num);
+    // console.log("num", num);
     isUnique =
       isUniqueToRow(num, line) &&
       isUniqueToColumn(num, lines, line) &&
       isUniqueToBox(num, lines, line);
     count++;
-    if (isUnique) {
-      console.log(">>> isUnique", lines.length);
-    }
+    // if (isUnique) {
+    //   console.log(">>> isUnique", lines.length);
+    // }
   }
   if (isUnique) {
     return num;
@@ -111,7 +194,6 @@ const getRandomNumber = () => {
 const getLines = () => {
   const lines = [getRandomLine()];
   for (let i = 0; i < 8; i++) {
-    // TODO: change from 3 to 8
     lines.push(getNextLine(lines));
   }
   return lines;
