@@ -110,11 +110,12 @@ const getNextLine = (lines) => {
   const lineLength = 9;
   let line = [];
   let count = 0;
-  while (!line.length && count < 100) {
+  while (!line.length && count < 500) {
     line = tryToGetNextLine(lineLength, lines);
+    count++;
   }
   if (line.length !== lineLength) {
-    throw "Couldn't get the next line with 100 tries";
+    throw "Couldn't get the next line with 500 tries";
   }
   return line;
 };
@@ -192,6 +193,53 @@ createContainer(allLines);
 
 // Run tests
 const testLines = (lines) => {
+  const testUnique = (arr) => {
+    const used = [];
+    let pass = true;
+    arr.forEach((item) => {
+      if (used.includes(item)) {
+        console.error("Some items are not unique", arr);
+        pass = false;
+      }
+      used.push(item);
+    });
+    return pass;
+  };
+
+  const testRows = (lines) => {
+    let pass = true;
+    lines.forEach((row) => {
+      if (!testUnique(row)) {
+        pass = false;
+      }
+    });
+    return pass;
+  };
+
+  const testColumns = (lines) => {
+    const columns = [];
+    for (let i = 0; i < lines.length; i++) {
+      const column = [];
+      lines.forEach((line) => {
+        column.push(line[i]);
+      });
+      columns.push(column);
+    }
+
+    let pass = true;
+    columns.forEach((column) => {
+      if (!testUnique(column)) {
+        pass = false;
+      }
+    });
+    return pass;
+  };
+
+  // TODO: add tests for boxes
+  const testBoxes = (lines) => {};
+
+  const testBox = (box) => {};
+
   let pass = true;
   pass = testRows(lines) && testColumns(lines);
   if (pass) {
@@ -200,53 +248,6 @@ const testLines = (lines) => {
     console.error("Some tests failed");
   }
 };
-
-const testUnique = (arr) => {
-  const used = [];
-  let pass = true;
-  arr.forEach((item) => {
-    if (used.includes(item)) {
-      console.error("Some items are not unique", arr);
-      pass = false;
-    }
-    used.push(item);
-  });
-  return pass;
-};
-
-const testRows = (lines) => {
-  let pass = true;
-  lines.forEach((row) => {
-    if (!testUnique(row)) {
-      pass = false;
-    }
-  });
-  return pass;
-};
-
-const testColumns = (lines) => {
-  const columns = [];
-  for (let i = 0; i < lines.length; i++) {
-    const column = [];
-    lines.forEach((line) => {
-      column.push(line[i]);
-    });
-    columns.push(column);
-  }
-
-  let pass = true;
-  columns.forEach((column) => {
-    if (!testUnique(column)) {
-      pass = false;
-    }
-  });
-  return pass;
-};
-
-// TODO: add tests for boxes
-const testBoxes = (lines) => {};
-
-const testBox = (box) => {};
 
 // Uncomment next line to run tests
 // testLines(allLines);
