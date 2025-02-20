@@ -1,26 +1,9 @@
-// alert("ready");
+// Let's build a sudoku board!
 
 const getRandomLine = () => {
   const sampleLine = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   return [...sampleLine].sort(() => Math.random() - 0.5);
 };
-
-// const getNextLine = (prevLines) => {
-//   let newLine;
-//   let count = 0;
-//   let areUnique;
-
-//   while (!areUnique && count < 100) {
-//     count++;
-//     console.log(count);
-//     newLine = getRandomLine();
-//     areUnique = prevLines.every((prevLine) => {
-//       return areValuesUnique(newLine, prevLine);
-//     });
-//   }
-//   console.log(areUnique);
-//   return newLine;
-// };
 
 const areValuesUnique = (currLine, prevLine) => {
   let valuesAreUnique = true;
@@ -79,7 +62,6 @@ const getBox = (lines, line) => {
 const getBoxValues = (box, lines, line) => {
   const values = [];
   const wipLines = [...lines, line];
-  console.log("wipLines", wipLines);
   let rowStart;
   let rowEnd;
   let colStart;
@@ -121,13 +103,10 @@ const getBoxValues = (box, lines, line) => {
 const isUniqueToBox = (num, lines, line) => {
   const box = getBox(lines, line);
   const boxValues = getBoxValues(box, lines, line);
-  console.log("box", box);
-  console.log("box values", boxValues);
   return !boxValues.includes(num);
 };
 
 const getNextLine = (lines) => {
-  // console.log("getNextLine");
   const lineLength = 9;
   let line = [];
   let count = 0;
@@ -149,30 +128,22 @@ const tryToGetNextLine = (lineLength, lines) => {
     }
   }
   if (line.length === lineLength) {
-    console.log(">>>>>>>> got the line", lines.length);
     return line;
   }
-  console.log(">>>>>>>> try line again", lines.length);
   return [];
 };
 
 const getNextNumber = (lines, line) => {
-  // console.log("getNextNumber");
   let isUnique = false;
   let count = 0;
   let num = getRandomNumber();
   while (!isUnique && count < 9) {
-    // console.log("count", count);
     num = addOne(num);
-    // console.log("num", num);
     isUnique =
       isUniqueToRow(num, line) &&
       isUniqueToColumn(num, lines, line) &&
       isUniqueToBox(num, lines, line);
     count++;
-    // if (isUnique) {
-    //   console.log(">>> isUnique", lines.length);
-    // }
   }
   if (isUnique) {
     return num;
@@ -216,72 +187,4 @@ const createContainer = (lines) => {
 };
 
 const lines = getLines();
-console.log(lines);
 createContainer(lines);
-
-// const getLines = () => {
-//   const lines = [];
-//   const sampleLine = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-//   for (let row = 0; row < 9; row++) {
-//     if (row === 0) {
-//       lines.push(getRandomLine());
-//     } else {
-//       const nextLine = getNextLine(lines);
-//       console.log(">>>>>");
-//       lines.push(nextLine);
-//     }
-//   }
-
-//   console.log(lines);
-//   return lines;
-// };
-
-// const getLines = () => {
-//   const lines = [];
-
-//   // create the values in the squares
-//   const sampleLine = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-//   for (let row = 0; row < 2; row++) {
-//     let line;
-//     const randomLine = [...sampleLine].sort(() => Math.random() - 0.5);
-//     if (row === 0) {
-//       line = randomLine;
-//     } else {
-//       line = [];
-//       const unused = [...randomLine];
-//       unused.forEach((value) => {
-//         console.log("value", value);
-//         for (i = 0; i < row; i++) {
-//           // check if the unused value is the same as any of the ones above it
-//           // the ones above it are the values at the same index of the line we're on for each of the lines
-//           if (value === lines[row - 1][line.length]) {
-//             unused.push(value);
-//           } else {
-//             line.push(value);
-//           }
-//         }
-//       });
-//     }
-//     lines.push(line);
-//   }
-
-//   console.log(lines);
-//   return lines;
-// };
-
-// let sortIndex = 0;
-// let rowProgress = 0;
-// line.sort((a, b) => {
-//   for (rowProgress < row; rowProgress++; ) {
-//     console.log("b", b);
-//     console.log("rowProgress", rowProgress);
-//     console.log("lines[rowProgress]", lines[rowProgress]);
-//     if (b === row[rowProgress]) {
-//       return 1;
-//     }
-//     return -1;
-//   }
-//   sortIndex++;
-// });
