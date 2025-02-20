@@ -186,5 +186,50 @@ const createContainer = (lines) => {
   board.appendChild(container);
 };
 
-const lines = getLines();
-createContainer(lines);
+// Execute the code
+const allLines = getLines();
+createContainer(allLines);
+
+// tests
+
+const testLines = (lines) => {
+  let pass = true;
+  pass = testRows(lines);
+  if (pass) {
+    console.log("All tests pass");
+  } else {
+    console.error("Some tests failed");
+  }
+};
+
+const testRows = (lines) => {
+  let pass = true;
+  lines.forEach((row) => {
+    if (!testRow(row)) {
+      pass = false;
+    }
+  });
+  return pass;
+};
+
+const testRow = (row) => {
+  const used = [];
+  let pass = true;
+  row.forEach((item) => {
+    if (used.includes(item)) {
+      console.error("Row items are not unique", row);
+      pass = false;
+    }
+    used.push(item);
+  });
+  return pass;
+};
+
+const testColumns = (lines) => {};
+const testColumn = (column) => {};
+
+const testBoxes = (lines) => {};
+
+const testBox = (box) => {};
+
+testLines(allLines);
