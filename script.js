@@ -190,11 +190,10 @@ const createContainer = (lines) => {
 const allLines = getLines();
 createContainer(allLines);
 
-// tests
-
+// Run tests
 const testLines = (lines) => {
   let pass = true;
-  pass = testRows(lines);
+  pass = testRows(lines) && testColumns(lines);
   if (pass) {
     console.log("All tests pass");
   } else {
@@ -202,22 +201,12 @@ const testLines = (lines) => {
   }
 };
 
-const testRows = (lines) => {
-  let pass = true;
-  lines.forEach((row) => {
-    if (!testRow(row)) {
-      pass = false;
-    }
-  });
-  return pass;
-};
-
-const testRow = (row) => {
+const testUnique = (arr) => {
   const used = [];
   let pass = true;
-  row.forEach((item) => {
+  arr.forEach((item) => {
     if (used.includes(item)) {
-      console.error("Row items are not unique", row);
+      console.error("Some items are not unique", arr);
       pass = false;
     }
     used.push(item);
@@ -225,11 +214,39 @@ const testRow = (row) => {
   return pass;
 };
 
-const testColumns = (lines) => {};
-const testColumn = (column) => {};
+const testRows = (lines) => {
+  let pass = true;
+  lines.forEach((row) => {
+    if (!testUnique(row)) {
+      pass = false;
+    }
+  });
+  return pass;
+};
 
+const testColumns = (lines) => {
+  const columns = [];
+  for (let i = 0; i < lines.length; i++) {
+    const column = [];
+    lines.forEach((line) => {
+      column.push(line[i]);
+    });
+    columns.push(column);
+  }
+
+  let pass = true;
+  columns.forEach((column) => {
+    if (!testUnique(column)) {
+      pass = false;
+    }
+  });
+  return pass;
+};
+
+// TODO: add tests for boxes
 const testBoxes = (lines) => {};
 
 const testBox = (box) => {};
 
-testLines(allLines);
+// Uncomment next line to run tests
+// testLines(allLines);
