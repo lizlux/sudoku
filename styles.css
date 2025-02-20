@@ -38,3 +38,12 @@ body {
 .square:nth-last-child(-n + 9) {
   border-bottom: 1px solid black;
 }
+
+.square.hidden {
+  cursor: pointer;
+}
+
+.square.hidden span {
+  display: block;
+  visibility: hidden;
+}

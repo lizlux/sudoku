@@ -115,6 +115,7 @@ const getNextLine = (lines) => {
     count++;
   }
   if (line.length !== lineLength) {
+    // TODO: put helpful message in the UX
     throw "Couldn't get the next line with 500 tries";
   }
   return line;
@@ -171,16 +172,36 @@ const getLines = () => {
   return lines;
 };
 
+const getHidden = () => {
+  const hiddenCount = 30; // TODO: make this dynamic based on easy / medium / hard
+  const hiddenGrid = new Array(9).fill(new Array(9).fill(false));
+  for (let i = 0; i < hiddenCount; i++) {
+    const rowIndex = getRandomNumber() - 1;
+    const colIndex = getRandomNumber() - 1;
+    const rowToReplace = [...hiddenGrid[rowIndex]];
+    rowToReplace.splice(colIndex, 1, true);
+    hiddenGrid.splice(rowIndex, 1, rowToReplace);
+  }
+  console.log(hiddenGrid);
+  return hiddenGrid;
+};
+
 const createContainer = (lines) => {
   const board = document.querySelector("#sudoku-board");
   const container = document.createElement("div");
+  const hiddenMap = getHidden();
   container.className = "container";
 
-  lines.forEach((line) => {
-    line.forEach((value) => {
+  lines.forEach((line, lineIndex) => {
+    line.forEach((value, valueIndex) => {
       const square = document.createElement("div");
-      square.className = "square";
-      square.innerText = value;
+      square.classList.add("square");
+      if (hiddenMap[lineIndex][valueIndex] === true) {
+        square.classList.add("hidden");
+      }
+      const span = document.createElement("span");
+      span.innerText = value;
+      square.appendChild(span);
       container.appendChild(square);
     });
   });
