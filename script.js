@@ -115,7 +115,6 @@ const getNextLine = (lines) => {
     count++;
   }
   if (line.length !== lineLength) {
-    // TODO: put helpful message in the UX
     throw "Couldn't get the next line with 500 tries";
   }
   return line;
@@ -240,16 +239,26 @@ const checkIfComplete = () => {
   return isComplete;
 };
 
+const showFeedback = (square, className) => {
+  square.classList.add(className);
+  setTimeout(() => {
+    square.classList.remove(className);
+  }, 500);
+};
+
 const keyDownHandler = (keyDownEvent) => {
   const code = keyDownEvent.keyCode;
   const value = selectedSquare.querySelector("span").innerHTML;
   if (keyCodeMap[code]) {
     if (Number(value) === keyCodeMap[code]) {
       selectedSquare.classList.remove("hidden");
+      showFeedback(selectedSquare, "success");
       const isComplete = checkIfComplete();
       if (isComplete) {
-        alert("You did it! 🎉");
+        setTimeout(() => alert("You did it! 🎉"), 0);
       }
+    } else {
+      showFeedback(selectedSquare, "error");
     }
   }
 };
@@ -273,9 +282,17 @@ const createBoard = (lines) => {
   board.appendChild(getContainer(lines));
 };
 
+const handleError = () => {
+  document.querySelector(".error-message").classList.remove("hidden");
+};
+
 // Execute the code
-const allLines = getLines();
-createBoard(allLines);
+try {
+  const allLines = getLines();
+  createBoard(allLines);
+} catch (e) {
+  handleError();
+}
 
 // Run tests
 const testLines = (lines) => {
