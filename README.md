@@ -1,2 +1,2 @@
-# sudoku
-sudoku app
+# Sudoku
+VanillaJS Sudoku app
