@@ -47,3 +47,7 @@ body {
   display: block;
   visibility: hidden;
 }
+
+.square.hidden.selected {
+  background-color: #fffe00;
+}

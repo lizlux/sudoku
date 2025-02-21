@@ -173,7 +173,7 @@ const getLines = () => {
 };
 
 const getHidden = () => {
-  const hiddenCount = 30; // TODO: make this dynamic based on easy / medium / hard
+  const hiddenCount = 2; // TODO: make this dynamic based on easy / medium / hard
   const hiddenGrid = new Array(9).fill(new Array(9).fill(false));
   for (let i = 0; i < hiddenCount; i++) {
     const rowIndex = getRandomNumber() - 1;
@@ -182,12 +182,10 @@ const getHidden = () => {
     rowToReplace.splice(colIndex, 1, true);
     hiddenGrid.splice(rowIndex, 1, rowToReplace);
   }
-  console.log(hiddenGrid);
   return hiddenGrid;
 };
 
-const createContainer = (lines) => {
-  const board = document.querySelector("#sudoku-board");
+const getContainer = (lines) => {
   const container = document.createElement("div");
   const hiddenMap = getHidden();
   container.className = "container";
@@ -198,6 +196,7 @@ const createContainer = (lines) => {
       square.classList.add("square");
       if (hiddenMap[lineIndex][valueIndex] === true) {
         square.classList.add("hidden");
+        initSquareInput(square);
       }
       const span = document.createElement("span");
       span.innerText = value;
@@ -205,12 +204,78 @@ const createContainer = (lines) => {
       container.appendChild(square);
     });
   });
-  board.appendChild(container);
+  return container;
+};
+
+// note: this isn't always accurate depending on the keyboard
+const keyCodeMap = {
+  49: 1,
+  50: 2,
+  51: 3,
+  52: 4,
+  53: 5,
+  54: 6,
+  55: 7,
+  56: 8,
+  57: 9,
+  97: 2,
+  98: 3,
+  99: 4,
+  100: 5,
+  101: 6,
+  102: 7,
+  103: 8,
+  105: 9,
+};
+
+let selectedSquare = null;
+
+const checkIfComplete = () => {
+  let isComplete = true;
+  document.querySelectorAll(".square").forEach((square) => {
+    if (square.classList.contains("hidden")) {
+      isComplete = false;
+    }
+  });
+  return isComplete;
+};
+
+const keyDownHandler = (keyDownEvent) => {
+  const code = keyDownEvent.keyCode;
+  const value = selectedSquare.querySelector("span").innerHTML;
+  if (keyCodeMap[code]) {
+    if (Number(value) === keyCodeMap[code]) {
+      selectedSquare.classList.remove("hidden");
+      const isComplete = checkIfComplete();
+      if (isComplete) {
+        alert("You did it! 🎉");
+      }
+    }
+  }
+};
+
+const initSquareInput = (square) => {
+  square.addEventListener("click", () => {
+    if (!selectedSquare) {
+      document.addEventListener("keydown", keyDownHandler);
+    }
+    if (square === selectedSquare) {
+      return;
+    }
+    selectedSquare?.classList.remove("selected");
+    selectedSquare = square;
+    square.classList.add("selected");
+  });
+};
+
+const createBoard = (lines) => {
+  const board = document.querySelector("#sudoku-board");
+  board.appendChild(getContainer(lines));
 };
 
 // Execute the code
 const allLines = getLines();
-createContainer(allLines);
+createBoard(allLines);
 
 // Run tests
 const testLines = (lines) => {
