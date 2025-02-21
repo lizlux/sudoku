@@ -173,7 +173,7 @@ const getLines = () => {
 };
 
 const getHidden = () => {
-  const hiddenCount = 2; // TODO: make this dynamic based on easy / medium / hard
+  const hiddenCount = 20; // TODO: make this dynamic based on easy / medium / hard
   const hiddenGrid = new Array(9).fill(new Array(9).fill(false));
   for (let i = 0; i < hiddenCount; i++) {
     const rowIndex = getRandomNumber() - 1;
