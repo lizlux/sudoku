@@ -110,7 +110,7 @@ const getNextLine = (lines) => {
   const lineLength = 9;
   let line = [];
   let count = 0;
-  while (!line.length && count < 500) {
+  while (!line.length && count < 10000) {
     line = tryToGetNextLine(lineLength, lines);
     count++;
   }
