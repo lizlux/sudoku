@@ -1,18 +1,10 @@
 // Let's build a sudoku board!
 
+import testLines from "./modules/tests.js";
+
 const getRandomLine = () => {
   const sampleLine = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   return [...sampleLine].sort(() => Math.random() - 0.5);
-};
-
-const areValuesUnique = (currLine, prevLine) => {
-  let valuesAreUnique = true;
-  currLine.forEach((value, index) => {
-    if (currLine[index] === prevLine[index]) {
-      valuesAreUnique = false;
-    }
-  });
-  return valuesAreUnique;
 };
 
 const isUniqueToRow = (num, line) => {
@@ -110,10 +102,11 @@ const getNextLine = (lines) => {
   const lineLength = 9;
   let line = [];
   let count = 0;
-  while (!line.length && count < 10000) {
+  while (!line.length && count < 500) {
     line = tryToGetNextLine(lineLength, lines);
     count++;
   }
+  // TODO: instead of throwing here, start whole board over
   if (line.length !== lineLength) {
     throw "Couldn't get the next line with 500 tries";
   }
@@ -290,67 +283,9 @@ const handleError = () => {
 try {
   const allLines = getLines();
   createBoard(allLines);
+
+  // Uncomment next line to run tests
+  // testLines(allLines);
 } catch (e) {
   handleError();
 }
-
-// Run tests
-const testLines = (lines) => {
-  const testUnique = (arr) => {
-    const used = [];
-    let pass = true;
-    arr.forEach((item) => {
-      if (used.includes(item)) {
-        console.error("Some items are not unique", arr);
-        pass = false;
-      }
-      used.push(item);
-    });
-    return pass;
-  };
-
-  const testRows = (lines) => {
-    let pass = true;
-    lines.forEach((row) => {
-      if (!testUnique(row)) {
-        pass = false;
-      }
-    });
-    return pass;
-  };
-
-  const testColumns = (lines) => {
-    const columns = [];
-    for (let i = 0; i < lines.length; i++) {
-      const column = [];
-      lines.forEach((line) => {
-        column.push(line[i]);
-      });
-      columns.push(column);
-    }
-
-    let pass = true;
-    columns.forEach((column) => {
-      if (!testUnique(column)) {
-        pass = false;
-      }
-    });
-    return pass;
-  };
-
-  // TODO: add tests for boxes
-  const testBoxes = (lines) => {};
-
-  const testBox = (box) => {};
-
-  let pass = true;
-  pass = testRows(lines) && testColumns(lines);
-  if (pass) {
-    console.log("All tests pass");
-  } else {
-    console.error("Some tests failed");
-  }
-};
-
-// Uncomment next line to run tests
-// testLines(allLines);
