@@ -1,4 +1,3 @@
-import { ValidNumber } from "../types/sudoku-types";
 import { getRandomNumber } from "./numberUtils";
 
 const difficultyMap = {

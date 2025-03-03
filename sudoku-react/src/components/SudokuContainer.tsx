@@ -3,17 +3,13 @@ import getLines from "../helpers/getSudokuGrid";
 import { ValidNumber } from "../types/sudoku-types";
 import { getHidden } from "../helpers/setUpGame";
 
-function SudokuContainer({ difficultyLevel }: { difficultyLevel: 1 | 2 | 3 }) {
-  const lines: RefObject<ValidNumber[][] | null> = useRef(null);
-  if (!lines.current) {
-    lines.current = getLines();
-  }
-
-  const hiddenGrid: RefObject<boolean[][] | null> = useRef(null);
-  if (!hiddenGrid.current) {
-    hiddenGrid.current = getHidden(difficultyLevel);
-  }
-
+function SudokuContainer({
+  lines,
+  hiddenGrid,
+}: {
+  lines: ValidNumber[][];
+  hiddenGrid: boolean[][];
+}) {
   const [selectedRowIndex, setSelectedRowIndex] = useState<ValidNumber | null>(
     null
   );
@@ -22,8 +18,10 @@ function SudokuContainer({ difficultyLevel }: { difficultyLevel: 1 | 2 | 3 }) {
   );
 
   const handleClick = (rowIndex: ValidNumber, colIndex: ValidNumber) => {
-    setSelectedRowIndex(rowIndex);
-    setSelectedColIndex(colIndex);
+    if (isHidden(rowIndex, colIndex)) {
+      setSelectedRowIndex(rowIndex);
+      setSelectedColIndex(colIndex);
+    }
   };
 
   const isSelected = (rowIndex: ValidNumber, colIndex: ValidNumber) => {
@@ -31,26 +29,22 @@ function SudokuContainer({ difficultyLevel }: { difficultyLevel: 1 | 2 | 3 }) {
   };
 
   const isHidden = (rowIndex: ValidNumber, colIndex: ValidNumber) => {
-    return (
-      hiddenGrid.current && hiddenGrid.current[rowIndex][colIndex] === true
-    );
+    return hiddenGrid && hiddenGrid[rowIndex][colIndex] === true;
   };
 
   const getSquareClassName = (rowIndex: ValidNumber, colIndex: ValidNumber) => {
     return `square ${
       isSelected(rowIndex as ValidNumber, colIndex as ValidNumber)
-        ? "selected"
-        : null
-    } ${
-      isHidden(rowIndex as ValidNumber, colIndex as ValidNumber)
-        ? "hidden"
-        : null
+        ? "selected "
+        : ""
+    }${
+      isHidden(rowIndex as ValidNumber, colIndex as ValidNumber) ? "hidden" : ""
     }`;
   };
 
   return (
     <div className="container">
-      {lines.current.map((line, rowIndex) =>
+      {lines.map((line, rowIndex) =>
         line.map((square, colIndex) => (
           <div
             className={getSquareClassName(
@@ -62,7 +56,11 @@ function SudokuContainer({ difficultyLevel }: { difficultyLevel: 1 | 2 | 3 }) {
               handleClick(rowIndex as ValidNumber, colIndex as ValidNumber)
             }
           >
-            <span>{square}</span>
+            <span>
+              {isHidden(rowIndex as ValidNumber, colIndex as ValidNumber)
+                ? ""
+                : square}
+            </span>
           </div>
         ))
       )}
