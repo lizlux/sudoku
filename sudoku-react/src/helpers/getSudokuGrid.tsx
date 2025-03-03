@@ -62,6 +62,7 @@ const getNextNumber = (
 let attempts = 0;
 
 const getLines = (): ValidNumber[][] => {
+  console.log("get lines");
   attempts++;
   if (attempts < 100) {
     try {
