@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import DifficultyToggle from "./DifficultyToggle";
 import SudokuContainer from "./SudokuContainer";
-import { getHidden } from "../helpers/setUpGame";
 import { ValidNumber } from "../types/sudoku-types";
-import getLines from "../helpers/getSudokuGrid";
+import { getLines, getHidden } from "../helpers/getSudokuGrid";
 
 function App() {
   const [difficultyLevel, setDifficultyLevel] = useState<1 | 2 | 3>(1);

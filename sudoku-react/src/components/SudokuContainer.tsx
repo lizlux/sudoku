@@ -66,12 +66,13 @@ function SudokuContainer({
               rowIndex as ValidNumber,
               colIndex as ValidNumber
             )}
+            data-testid="sudoku-square"
             key={`${rowIndex}${colIndex}`}
             onClick={() =>
               handleClick(rowIndex as ValidNumber, colIndex as ValidNumber)
             }
           >
-            <span>
+            <span data-testid="sudoku-span">
               {isHidden(rowIndex as ValidNumber, colIndex as ValidNumber)
                 ? ""
                 : square}

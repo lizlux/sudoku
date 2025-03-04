@@ -59,9 +59,42 @@ const getNextNumber = (
   return null;
 };
 
-let attempts = 0;
+const difficultyMap = {
+  1: 30,
+  2: 50,
+  3: 70,
+};
 
-const getLines = (): ValidNumber[][] => {
+export const getHidden = (difficultyLevel: 1 | 2 | 3): boolean[][] => {
+  const hiddenCount: number = difficultyMap[difficultyLevel];
+  const hiddenGrid = new Array(9).fill(new Array(9).fill(false));
+
+  let tries = 0;
+  const maxTries = 1000;
+  const getUniqueXY = (): number[] => {
+    if (tries < maxTries) {
+      tries++;
+      const rowIndex = getRandomNumber() - 1;
+      const colIndex = getRandomNumber() - 1;
+      if (hiddenGrid[rowIndex][colIndex] === true) {
+        return getUniqueXY();
+      }
+      return [rowIndex, colIndex];
+    } else {
+      throw new Error(`Couldn't get the hidden grid after ${maxTries} tries`);
+    }
+  };
+  for (let i = 0; i < hiddenCount; i++) {
+    const [row, col] = getUniqueXY();
+    const rowToReplace = [...hiddenGrid[row]];
+    rowToReplace.splice(col, 1, true);
+    hiddenGrid.splice(row, 1, rowToReplace);
+  }
+  return hiddenGrid;
+};
+
+let attempts = 0;
+export const getLines = (): ValidNumber[][] => {
   attempts++;
   if (attempts < 100) {
     try {
@@ -79,5 +112,3 @@ const getLines = (): ValidNumber[][] => {
     throw new Error("Couldn't get the sudoku board with 100 tries");
   }
 };
-
-export default getLines;
