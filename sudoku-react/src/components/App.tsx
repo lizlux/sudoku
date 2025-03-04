@@ -10,12 +10,42 @@ function App() {
   const [difficultyLevel, setDifficultyLevel] = useState<1 | 2 | 3>(1);
   const [lines, setLines] = useState<ValidNumber[][] | null>(null);
   const [hiddenGrid, setHiddenGrid] = useState<boolean[][] | null>(null);
-  const [selectedRowIndex, setSelectedRowIndex] = useState<ValidNumber | null>(
-    null
-  );
-  const [selectedColIndex, setSelectedColIndex] = useState<ValidNumber | null>(
-    null
-  );
+  const [selectedXY, setSelectedXY] = useState<ValidNumber[] | null>(null);
+  const [successXY, setSuccessXY] = useState<ValidNumber[] | null>(null);
+  const [failXY, setFailXY] = useState<ValidNumber[] | null>(null);
+
+  const updateHiddenGrid = (grid: boolean[][], selected: ValidNumber[]) => {
+    const gridCopy = [...grid];
+    const rowToReplace = gridCopy[selected[0]];
+    rowToReplace.splice(selected[1], 1, false);
+    gridCopy.splice(selected[1], 1, rowToReplace);
+    setHiddenGrid(gridCopy);
+  };
+
+  const checkIsComplete = (grid: boolean[][]) => {
+    return grid?.every((row) => {
+      return row.every((col) => {
+        return col !== true;
+      });
+    });
+  };
+
+  const handleKeyDownSuccess = (grid: boolean[][], selected: ValidNumber[]) => {
+    console.log("got it right!");
+    updateHiddenGrid(grid, selected);
+    setSuccessXY(selected);
+    setSelectedXY(null);
+    const isComplete = checkIsComplete(grid);
+    if (isComplete) {
+      setTimeout(() => alert("You did it! 🎉"), 0);
+      // alert("You did it! 🎉");
+    }
+  };
+
+  const handleKeyDownFail = (selected: ValidNumber[]) => {
+    console.log("got it wrong :(");
+    setFailXY(selected);
+  };
 
   useEffect(() => {
     setLines(getLines());
@@ -23,31 +53,39 @@ function App() {
   }, [difficultyLevel]);
 
   useEffect(() => {
+    if (!successXY) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      setSuccessXY(null);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [successXY]);
+
+  useEffect(() => {
+    if (!failXY) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      setFailXY(null);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [failXY]);
+
+  useEffect(() => {
     const getSelectedValue = (): ValidNumber | null => {
-      if (!selectedColIndex || !selectedRowIndex || !lines) {
+      if (!selectedXY || !lines) {
         return null;
       }
-      return lines[selectedRowIndex][selectedColIndex];
+      return lines[selectedXY[0]][selectedXY[1]];
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       const code = Number(event.key);
-      if (
-        selectedColIndex &&
-        selectedRowIndex &&
-        hiddenGrid &&
-        code &&
-        code === getSelectedValue()
-      ) {
-        console.log("got it right!");
-
-        const newGrid = [...hiddenGrid];
-        const rowToReplace = newGrid[selectedRowIndex];
-        rowToReplace.splice(selectedColIndex, 1, false);
-        newGrid.splice(selectedRowIndex, 1, rowToReplace);
-        setHiddenGrid(newGrid);
-      } else {
-        console.log("got it wrong :(");
+      if (selectedXY && hiddenGrid && code && code === getSelectedValue()) {
+        handleKeyDownSuccess(hiddenGrid, selectedXY);
+      } else if (selectedXY) {
+        handleKeyDownFail(selectedXY);
       }
     };
 
@@ -56,7 +94,7 @@ function App() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [lines, selectedColIndex, selectedRowIndex, hiddenGrid]);
+  });
 
   return (
     <div className="App">
@@ -66,10 +104,10 @@ function App() {
           <SudokuContainer
             lines={lines}
             hiddenGrid={hiddenGrid}
-            selectedColIndex={selectedColIndex}
-            selectedRowIndex={selectedRowIndex}
-            setSelectedColIndex={setSelectedColIndex}
-            setSelectedRowIndex={setSelectedRowIndex}
+            selectedXY={selectedXY}
+            setSelectedXY={setSelectedXY}
+            successXY={successXY}
+            failXY={failXY}
           />
           <DifficultyToggle
             setDifficultyLevel={setDifficultyLevel}

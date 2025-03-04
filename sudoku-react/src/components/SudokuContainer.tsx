@@ -1,30 +1,38 @@
-import { useEffect } from "react";
 import { ValidNumber } from "../types/sudoku-types";
 
 function SudokuContainer({
   lines,
   hiddenGrid,
-  selectedRowIndex,
-  selectedColIndex,
-  setSelectedColIndex,
-  setSelectedRowIndex,
+  selectedXY,
+  setSelectedXY,
+  successXY,
+  failXY,
 }: {
   lines: ValidNumber[][];
   hiddenGrid: boolean[][];
-  selectedRowIndex: ValidNumber | null;
-  selectedColIndex: ValidNumber | null;
-  setSelectedColIndex: (number: ValidNumber) => void;
-  setSelectedRowIndex: (number: ValidNumber) => void;
+  selectedXY: ValidNumber[] | null;
+  setSelectedXY: (values: ValidNumber[]) => void;
+  successXY: ValidNumber[] | null;
+  failXY: ValidNumber[] | null;
 }) {
   const handleClick = (rowIndex: ValidNumber, colIndex: ValidNumber) => {
     if (isHidden(rowIndex, colIndex)) {
-      setSelectedRowIndex(rowIndex);
-      setSelectedColIndex(colIndex);
+      setSelectedXY([rowIndex, colIndex]);
     }
   };
 
   const isSelected = (rowIndex: ValidNumber, colIndex: ValidNumber) => {
-    return rowIndex === selectedRowIndex && colIndex === selectedColIndex;
+    return (
+      selectedXY && rowIndex === selectedXY[0] && colIndex === selectedXY[1]
+    );
+  };
+
+  const isFail = (rowIndex: ValidNumber, colIndex: ValidNumber) => {
+    return failXY && rowIndex === failXY[0] && colIndex === failXY[1];
+  };
+
+  const isSuccess = (rowIndex: ValidNumber, colIndex: ValidNumber) => {
+    return successXY && rowIndex === successXY[0] && colIndex === successXY[1];
   };
 
   const isHidden = (rowIndex: ValidNumber, colIndex: ValidNumber) => {
@@ -37,7 +45,15 @@ function SudokuContainer({
         ? "selected "
         : ""
     }${
-      isHidden(rowIndex as ValidNumber, colIndex as ValidNumber) ? "hidden" : ""
+      isHidden(rowIndex as ValidNumber, colIndex as ValidNumber)
+        ? "hidden "
+        : ""
+    }${
+      isFail(rowIndex as ValidNumber, colIndex as ValidNumber) ? "fail " : ""
+    }${
+      isSuccess(rowIndex as ValidNumber, colIndex as ValidNumber)
+        ? "success "
+        : ""
     }`;
   };
 
