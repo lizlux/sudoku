@@ -1,22 +1,21 @@
-import { RefObject, useRef, useState } from "react";
-import getLines from "../helpers/getSudokuGrid";
+import { useEffect } from "react";
 import { ValidNumber } from "../types/sudoku-types";
-import { getHidden } from "../helpers/setUpGame";
 
 function SudokuContainer({
   lines,
   hiddenGrid,
+  selectedRowIndex,
+  selectedColIndex,
+  setSelectedColIndex,
+  setSelectedRowIndex,
 }: {
   lines: ValidNumber[][];
   hiddenGrid: boolean[][];
+  selectedRowIndex: ValidNumber | null;
+  selectedColIndex: ValidNumber | null;
+  setSelectedColIndex: (number: ValidNumber) => void;
+  setSelectedRowIndex: (number: ValidNumber) => void;
 }) {
-  const [selectedRowIndex, setSelectedRowIndex] = useState<ValidNumber | null>(
-    null
-  );
-  const [selectedColIndex, setSelectedColIndex] = useState<ValidNumber | null>(
-    null
-  );
-
   const handleClick = (rowIndex: ValidNumber, colIndex: ValidNumber) => {
     if (isHidden(rowIndex, colIndex)) {
       setSelectedRowIndex(rowIndex);

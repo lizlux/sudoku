@@ -1,9 +1,9 @@
 import { getRandomNumber } from "./numberUtils";
 
 const difficultyMap = {
-  1: 20,
-  2: 40,
-  3: 60,
+  1: 3,
+  2: 50,
+  3: 70,
 };
 
 export const getHidden = (difficultyLevel: 1 | 2 | 3): boolean[][] => {

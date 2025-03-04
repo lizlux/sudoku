@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import DifficultyToggle from "./DifficultyToggle";
 import SudokuContainer from "./SudokuContainer";
@@ -10,30 +10,67 @@ function App() {
   const [difficultyLevel, setDifficultyLevel] = useState<1 | 2 | 3>(1);
   const [lines, setLines] = useState<ValidNumber[][] | null>(null);
   const [hiddenGrid, setHiddenGrid] = useState<boolean[][] | null>(null);
+  const [selectedRowIndex, setSelectedRowIndex] = useState<ValidNumber | null>(
+    null
+  );
+  const [selectedColIndex, setSelectedColIndex] = useState<ValidNumber | null>(
+    null
+  );
 
-  // const lines: RefObject<ValidNumber[][] | null> = useRef(null);
-  // if (!lines.current) {
-  //   lines.current = getLines();
-  // }
-
-  // const hiddenGrid: RefObject<boolean[][] | null> = useRef(null);
-  // if (!hiddenGrid.current) {
-  //   hiddenGrid.current = getHidden(difficultyLevel);
-  // }
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     setLines(getLines());
     setHiddenGrid(getHidden(difficultyLevel));
   }, [difficultyLevel]);
 
-  console.log("difficultyLevel", difficultyLevel);
+  useEffect(() => {
+    const getSelectedValue = (): ValidNumber | null => {
+      if (!selectedColIndex || !selectedRowIndex || !lines) {
+        return null;
+      }
+      return lines[selectedRowIndex][selectedColIndex];
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const code = Number(event.key);
+      if (
+        selectedColIndex &&
+        selectedRowIndex &&
+        hiddenGrid &&
+        code &&
+        code === getSelectedValue()
+      ) {
+        console.log("got it right!");
+
+        const newGrid = [...hiddenGrid];
+        const rowToReplace = newGrid[selectedRowIndex];
+        rowToReplace.splice(selectedColIndex, 1, false);
+        newGrid.splice(selectedRowIndex, 1, rowToReplace);
+        setHiddenGrid(newGrid);
+      } else {
+        console.log("got it wrong :(");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [lines, selectedColIndex, selectedRowIndex, hiddenGrid]);
 
   return (
     <div className="App">
       <h1>Welcome to Sudoku React</h1>
       {lines && hiddenGrid ? (
         <>
-          <SudokuContainer lines={lines} hiddenGrid={hiddenGrid} />
+          <SudokuContainer
+            lines={lines}
+            hiddenGrid={hiddenGrid}
+            selectedColIndex={selectedColIndex}
+            selectedRowIndex={selectedRowIndex}
+            setSelectedColIndex={setSelectedColIndex}
+            setSelectedRowIndex={setSelectedRowIndex}
+          />
           <DifficultyToggle
             setDifficultyLevel={setDifficultyLevel}
             difficultyLevel={difficultyLevel}
