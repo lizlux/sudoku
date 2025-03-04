@@ -18,7 +18,6 @@ function App() {
     const gridCopy = [...grid];
     const rowToReplace = gridCopy[selected[0]];
     rowToReplace.splice(selected[1], 1, false);
-    gridCopy.splice(selected[1], 1, rowToReplace);
     setHiddenGrid(gridCopy);
   };
 
@@ -38,7 +37,6 @@ function App() {
     const isComplete = checkIsComplete(grid);
     if (isComplete) {
       setTimeout(() => alert("You did it! 🎉"), 0);
-      // alert("You did it! 🎉");
     }
   };
 
