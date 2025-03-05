@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import DifficultyToggle from "./DifficultyToggle";
 import SudokuContainer from "./SudokuContainer";
-import { ValidNumber } from "../types/sudoku-types";
+import { DifficultyLevel, ValidNumber } from "../types/sudoku-types";
 import { getLines, getHidden } from "../helpers/getSudokuGrid";
 
 function App() {
-  const [difficultyLevel, setDifficultyLevel] = useState<1 | 2 | 3>(1);
+  const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevel>(null);
   const [lines, setLines] = useState<ValidNumber[][] | null>(null);
   const [hiddenGrid, setHiddenGrid] = useState<boolean[][] | null>(null);
   const [selectedXY, setSelectedXY] = useState<ValidNumber[] | null>(null);
@@ -45,8 +45,10 @@ function App() {
   };
 
   useEffect(() => {
-    setLines(getLines());
-    setHiddenGrid(getHidden(difficultyLevel));
+    if (difficultyLevel) {
+      setLines(getLines());
+      setHiddenGrid(getHidden(difficultyLevel));
+    }
   }, [difficultyLevel]);
 
   useEffect(() => {
@@ -96,7 +98,7 @@ function App() {
   return (
     <div className="App">
       <h1>Welcome to Sudoku React</h1>
-      {lines && hiddenGrid ? (
+      {difficultyLevel && lines && hiddenGrid ? (
         <>
           <SudokuContainer
             lines={lines}
@@ -106,12 +108,20 @@ function App() {
             successXY={successXY}
             failXY={failXY}
           />
-          <DifficultyToggle
-            setDifficultyLevel={setDifficultyLevel}
-            difficultyLevel={difficultyLevel}
-          />
+          <button
+            onClick={() => {
+              setDifficultyLevel(null);
+            }}
+          >
+            New Game
+          </button>
         </>
-      ) : null}
+      ) : (
+        <DifficultyToggle
+          setDifficultyLevel={setDifficultyLevel}
+          difficultyLevel={difficultyLevel}
+        />
+      )}
     </div>
   );
 }

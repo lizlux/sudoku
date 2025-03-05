@@ -1,11 +1,12 @@
+import { DifficultyLevel } from "../types/sudoku-types";
 import "./DifficultyToggle.css";
 
 const DifficultyToggle = ({
   difficultyLevel,
   setDifficultyLevel,
 }: {
-  difficultyLevel: 1 | 2 | 3;
-  setDifficultyLevel: (level: 1 | 2 | 3) => void;
+  difficultyLevel: DifficultyLevel;
+  setDifficultyLevel: (level: DifficultyLevel) => void;
 }) => {
   return (
     <div className="difficulty-toggle">

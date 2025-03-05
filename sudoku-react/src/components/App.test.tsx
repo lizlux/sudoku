@@ -1,7 +1,5 @@
-import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import App from "./App";
-import SudokuContainer from "./SudokuContainer";
 
 test("renders Welcome to Sudoku React header", () => {
   render(<App />);

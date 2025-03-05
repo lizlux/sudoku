@@ -61,8 +61,8 @@ const getNextNumber = (
 
 const difficultyMap = {
   1: 30,
-  2: 50,
-  3: 70,
+  2: 40,
+  3: 50,
 };
 
 export const getHidden = (difficultyLevel: 1 | 2 | 3): boolean[][] => {
