@@ -4,6 +4,7 @@ import DifficultyToggle from "./DifficultyToggle";
 import SudokuContainer from "./SudokuContainer";
 import { DifficultyLevel, ValidNumber } from "../types/sudoku-types";
 import { getLines, getHidden } from "../helpers/getSudokuGrid";
+import GameTimer from "./GameTimer";
 
 function App() {
   const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevel>(null);
@@ -113,6 +114,7 @@ function App() {
             >
               Back
             </a>
+            <GameTimer enableTimer={true} />
           </div>
           <SudokuContainer
             lines={lines}

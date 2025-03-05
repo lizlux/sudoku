@@ -1,3 +1,8 @@
+/* TODO:
+ *  - move grid styles to grid css
+ *  - set css variables for colors so they can be used throughout
+ */
+
 .App {
   display: flex;
   align-items: center;
@@ -94,6 +99,7 @@ h2 {
 }
 
 .header {
+  color: #277632;
   display: flex;
   justify-content: space-between;
   width: 100%;

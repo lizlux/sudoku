@@ -22,18 +22,18 @@ test("renders the whole board", () => {
   expect(squares.length).toBe(81);
 });
 
-const getBlanks = () => {
-  const spans = screen.getAllByTestId("sudoku-span");
-  const blanks = spans.reduce((acc: HTMLElement[], curr: HTMLElement) => {
-    if (curr.textContent?.trim() === "") {
-      acc.push(curr);
-    }
-    return acc;
-  }, []);
-  return blanks;
-};
-
 test("correct number of hidden square values", () => {
+  const getBlanks = () => {
+    const spans = screen.getAllByTestId("sudoku-span");
+    const blanks = spans.reduce((acc: HTMLElement[], curr: HTMLElement) => {
+      if (curr.textContent?.trim() === "") {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
+    return blanks;
+  };
+
   render(<App />);
   const easyButton = screen.getByRole("button", { name: "Easy" });
 
