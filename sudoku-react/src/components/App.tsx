@@ -97,9 +97,23 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Welcome to Sudoku React</h1>
+      <h1>Welcome to Sudoku</h1>
+      <h2>Built with React</h2>
       {difficultyLevel && lines && hiddenGrid ? (
         <>
+          <div className="header">
+            <a
+              href="/"
+              className="back-button"
+              role="button"
+              onClick={(event) => {
+                event.preventDefault();
+                setDifficultyLevel(null);
+              }}
+            >
+              Back
+            </a>
+          </div>
           <SudokuContainer
             lines={lines}
             hiddenGrid={hiddenGrid}
@@ -108,13 +122,6 @@ function App() {
             successXY={successXY}
             failXY={failXY}
           />
-          <button
-            onClick={() => {
-              setDifficultyLevel(null);
-            }}
-          >
-            New Game
-          </button>
         </>
       ) : (
         <DifficultyToggle

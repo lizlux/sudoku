@@ -1,8 +1,12 @@
 .App {
-  padding: 20px;
   display: flex;
   align-items: center;
   flex-direction: column;
+  max-width: 400px;
+  margin: 20px auto;
+  border: 1px solid #277632;
+  border-radius: 4px;
+  padding-bottom: 20px;
 }
 
 .container {
@@ -76,4 +80,46 @@
 
 .error-message.hidden {
   display: none;
+}
+
+h1 {
+  margin: 20px 0 10px;
+  color: #0d2510;
+}
+
+h2 {
+  color: #0d2510;
+  margin: 0 0 20px;
+  font-weight: normal;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0 0 20px 0;
+  padding: 10px;
+  background-color: #27763231;
+  box-sizing: border-box;
+}
+
+.back-button {
+  align-items: center;
+  display: flex;
+  text-decoration: none;
+  color: #277632;
+}
+
+.back-button:hover {
+  color: #0d2510;}
+
+.back-button::before {
+  content: "";
+  background-image: url("/public/arrow.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 10px;
+  height: 10px;
+  margin-right: 4px;
+  transform: scaleX(-1);
 }
