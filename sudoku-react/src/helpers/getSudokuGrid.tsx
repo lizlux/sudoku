@@ -1,3 +1,4 @@
+// TODO: Rename non-react files to .ts from .tsx
 import { addOne, getRandomLine, getRandomNumber } from "./numberUtils";
 import {
   isUniqueToRow,

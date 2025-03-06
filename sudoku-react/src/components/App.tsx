@@ -29,10 +29,10 @@ function App() {
     });
   };
 
-  const handleKeyDownSuccess = (grid: boolean[][], selected: ValidNumber[]) => {
+  const handleKeyDownSuccess = (grid: boolean[][], xy: ValidNumber[]) => {
     console.log("got it right!");
-    updateHiddenGrid(grid, selected);
-    setSuccessXY(selected);
+    updateHiddenGrid(grid, xy);
+    setSuccessXY(xy);
     setSelectedXY(null);
     const isComplete = checkIsComplete(grid);
     if (isComplete) {
